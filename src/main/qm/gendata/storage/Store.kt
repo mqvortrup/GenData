@@ -18,19 +18,23 @@ class Store(val name: String) {
     }
 
     fun getLatestGeneration(): Generation {
-        return lastestGenerationImpl()
+        return getLastestGenerationImpl()
     }
 
-    private fun lastestGenerationImpl(): GenerationImpl {
+    private fun getLastestGenerationImpl(): GenerationImpl {
         if (generations_.isEmpty())
-            throw IllegalArgumentException("No lastest generation in $name")
+            throw IllegalArgumentException("No latest generation in $name")
         else
             return generations_.last()
     }
 
     @Synchronized fun createNewGeneration(): ReadWriteGeneration {
         if (newestGeneration == null) {
-            newestGeneration = lastestGenerationImpl().copy()
+            newestGeneration =
+                    when (generations_.isEmpty()) {
+                        true -> GenerationImpl()
+                        false -> getLastestGenerationImpl().copy()
+                    }
             return newestGeneration as ReadWriteGeneration
         } else
             throw IllegalStateException("a new generation already exists")
