@@ -5,6 +5,9 @@ import qm.gendata.storage.ReadWriteGeneration
 import qm.gendata.storage.Value
 
 class GenerationImpl : ReadWriteGeneration {
+
+    private var discarded = false
+
     override fun length(): Long {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -22,6 +25,6 @@ class GenerationImpl : ReadWriteGeneration {
     }
 
     fun discard() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        discarded = true
     }
 }
