@@ -4,10 +4,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import qm.gendata.storage.spi.SimpleStoreImpl
 
 internal class NewStoreTest {
 
-    var store : Store = openStore("test")
+    var store : SimpleStoreImpl = openStore("test")
 
     @BeforeEach
     fun setUp() {
