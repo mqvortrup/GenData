@@ -8,7 +8,7 @@ import qm.gendata.storage.spi.SimpleStoreImpl
 
 internal class NewStoreTest {
 
-    var store : SimpleStoreImpl = openStore("test")
+    private var store : SimpleStoreImpl = openStore("test")
 
     @BeforeEach
     fun setUp() {
@@ -23,6 +23,11 @@ internal class NewStoreTest {
     }
 
     @Test
+    fun deleteFailOnEmptyStore() {
+        assertThrows(IllegalArgumentException::class.java, { store.deleteGeneration(0) })
+    }
+
+    @Test
     fun createAndPublishNewGeneration() {
         val generation = store.createNewGeneration()
         assertNotNull(generation)
@@ -32,9 +37,10 @@ internal class NewStoreTest {
 
     @Test
     fun createAndDiscardNewGeneration() {
-        val generation = store.createNewGeneration()
-        assertNotNull(generation)
+        val newGeneration = store.createNewGeneration()
+        assertNotNull(newGeneration)
         store.discardNewGeneration()
+        assertThrows(AssertionError::class.java, { newGeneration.length() })
         assertEquals(0, store.generations.size)
     }
 
@@ -47,6 +53,15 @@ internal class NewStoreTest {
     @Test
     fun publishNewGenerationFails() {
         assertThrows(IllegalStateException::class.java, { store.publishNewGeneration() })
+    }
+
+    @Test
+    fun deleteAGeneration() {
+        val newGeneration = store.createNewGeneration()
+        store.publishNewGeneration()
+        store.deleteGeneration(newGeneration.id)
+        assertThrows(AssertionError::class.java, { newGeneration.length() })
+        assertEquals(0, store.generations.size)
     }
 
     @Test

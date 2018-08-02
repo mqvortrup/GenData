@@ -9,6 +9,8 @@ interface Value {
 }
 
 interface Generation {
+    val id: Int
+
     fun get(key: Key): Value
     fun length(): Long
 }

@@ -10,6 +10,8 @@ interface Store {
 
     fun getLatestGeneration(): Generation
 
+    fun deleteGeneration(id: Int)
+
     fun createNewGeneration(): ReadWriteGeneration
 
     fun publishNewGeneration()
