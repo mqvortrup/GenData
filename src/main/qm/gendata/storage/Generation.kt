@@ -1,20 +1,17 @@
 package qm.gendata.storage
 
-interface Key {
+typealias Key = Int
 
-}
 
-interface Value {
-
-}
+typealias Value = String
 
 interface Generation {
     val id: Int
 
-    fun get(key: Key): Value
+    operator fun get(key: Key): Value
     fun length(): Long
 }
 
 interface ReadWriteGeneration : Generation {
-    fun put(key: Key, value: Value)
+    operator fun set(key: Key, value: Value)
 }

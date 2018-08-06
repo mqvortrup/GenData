@@ -6,6 +6,9 @@ import qm.gendata.storage.Store
 import kotlin.system.exitProcess
 
 class SimpleStoreImpl(override val name: String) : Store {
+
+    private val blocks = InMemoryBlocks(10, 10)
+
     override val generations : List<Generation>
         get() = generations_
 
@@ -46,7 +49,7 @@ class SimpleStoreImpl(override val name: String) : Store {
         if (newestGeneration == null) {
             newestGeneration =
                     when (generations_.isEmpty()) {
-                        true -> GenerationImpl(0)
+                        true -> GenerationImpl(0, blocks)
                         false -> getLastestGenerationImpl().copy()
                     }
             return newestGeneration as ReadWriteGeneration

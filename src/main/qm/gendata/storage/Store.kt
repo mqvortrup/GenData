@@ -20,6 +20,6 @@ interface Store {
 }
 
 
-fun openStore(name: String): SimpleStoreImpl {
+fun openStore(name: String): Store {
     return SimpleStoreImpl(name)
 }

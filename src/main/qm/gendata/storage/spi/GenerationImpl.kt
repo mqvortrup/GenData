@@ -1,10 +1,11 @@
 package qm.gendata.storage.spi
 
+import qm.gendata.storage.BlockList
 import qm.gendata.storage.Key
 import qm.gendata.storage.ReadWriteGeneration
 import qm.gendata.storage.Value
 
-class GenerationImpl(override val id: Int) : ReadWriteGeneration {
+class GenerationImpl(override val id: Int, private val blocks: BlockList) : ReadWriteGeneration {
 
     private var discarded = false
 
@@ -13,19 +14,19 @@ class GenerationImpl(override val id: Int) : ReadWriteGeneration {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-   override fun put(key: Key, value: Value) {
+   override fun set(key: Key, value: Value) {
        assert(!discarded, { "The generation is discarded"})
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       blocks[key / blocks.size][key] = value
     }
 
     override fun get(key: Key): Value {
         assert(!discarded, { "The generation is discarded"})
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return blocks[key / blocks.size][key]
     }
 
     fun copy(): GenerationImpl {
         assert(!discarded, { "The generation is discarded"})
-        TODO("not implemented")
+        return GenerationImpl(id+1, blocks)
     }
 
     fun discard() {
