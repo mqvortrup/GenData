@@ -1,8 +1,6 @@
 package qm.gendata.storage.spi
 
-import qm.gendata.storage.Generation
-import qm.gendata.storage.ReadWriteGeneration
-import qm.gendata.storage.Store
+import qm.gendata.storage.*
 import kotlin.system.exitProcess
 
 class SimpleStoreImpl(override val name: String) : Store {
@@ -49,7 +47,7 @@ class SimpleStoreImpl(override val name: String) : Store {
         if (newestGeneration == null) {
             newestGeneration =
                     when (generations_.isEmpty()) {
-                        true -> GenerationImpl(0, blocks)
+                        true -> GenerationImpl(0, blocks, newBlockMap())
                         false -> getLastestGenerationImpl().copy()
                     }
             return newestGeneration as ReadWriteGeneration

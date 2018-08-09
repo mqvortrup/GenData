@@ -39,7 +39,7 @@ internal class NewStoreTest {
         val newGeneration = store.createNewGeneration()
         assertNotNull(newGeneration)
         store.discardNewGeneration()
-        assertThrows(AssertionError::class.java, { newGeneration.length() })
+        assertThrows(IllegalArgumentException::class.java, { newGeneration.length() })
         assertEquals(0, store.generations.size)
     }
 
@@ -59,7 +59,7 @@ internal class NewStoreTest {
         val newGeneration = store.createNewGeneration()
         store.publishNewGeneration()
         store.deleteGeneration(newGeneration.id)
-        assertThrows(AssertionError::class.java, { newGeneration.length() })
+        assertThrows(IllegalArgumentException::class.java, { newGeneration.length() })
         assertEquals(0, store.generations.size)
     }
 
