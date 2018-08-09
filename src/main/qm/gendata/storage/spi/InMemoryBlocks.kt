@@ -5,7 +5,7 @@ import qm.gendata.storage.BlockList
 import qm.gendata.storage.Key
 import qm.gendata.storage.Value
 
-class InMemoryBlocks(override val size: Int, val blockSize: Int) : BlockList {
+class InMemoryBlocks(override val size: Int = 10, val blockSize: Int = 10) : BlockList {
 
     override val freeBlockCount: Int
         get() = freeBlocks.size
@@ -24,6 +24,7 @@ class InMemoryBlocks(override val size: Int, val blockSize: Int) : BlockList {
         assert(!freeBlocks.isEmpty(), { "Blocklist is exhausted, no free blocks available"} )
         val blockIndex = freeBlocks.removeAt(0)
         blocks[blockIndex].increaseReferences()
+        blocks[blockIndex].updatable = true
         return blockIndex
     }
 
@@ -40,7 +41,7 @@ class InMemoryBlocks(override val size: Int, val blockSize: Int) : BlockList {
 
 }
 
-class InMemoryBlock(override val capacity: Int, override var updating: Boolean = false) : Block {
+class InMemoryBlock(override val capacity: Int, override var updatable: Boolean = false) : Block {
 
     private var references_: Int = 0
 
@@ -62,10 +63,14 @@ class InMemoryBlock(override val capacity: Int, override var updating: Boolean =
     }
 
     override fun set(key: Key, value: Value) {
+        assert(updatable, { "Block is not updatable"} )
         entries[key % capacity] = value
     }
 
     override fun copyFrom(original: Block) {
-        TODO()
+        if (original is InMemoryBlock)
+            for (id in 0..capacity-1) entries[id] = original.entries[id]
+        else
+            throw IllegalArgumentException("Cannot copy from $original to $this")
     }
 }

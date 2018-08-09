@@ -6,7 +6,7 @@ import qm.gendata.storage.BlockList
 class Index(private val blockList: BlockList) {
 
     var updating = true
-        private set
+        internal set
 
     private val blockMap = mutableMapOf<Int, Int>()
 
@@ -34,11 +34,11 @@ class Index(private val blockList: BlockList) {
                 val newMappedId = blockList.allocate()
                 blockMap.put(id, newMappedId)
                 val block = blockList[newMappedId]
-                block.updating = true
+                block.updatable = true
                 return block
            }
             else -> {
-                when (blockList[mappedId].updating) {
+                when (blockList[mappedId].updatable) {
                     true -> blockList[mappedId]
                     false -> {
                         val newMappedId = blockList.allocate()
@@ -46,7 +46,7 @@ class Index(private val blockList: BlockList) {
                         val oldBlock = blockList[mappedId]
                         val newBlock = blockList[newMappedId]
                         newBlock.copyFrom(oldBlock)
-                        newBlock.updating = true
+                        newBlock.updatable = true
                         return newBlock
                     }
                 }
@@ -56,5 +56,6 @@ class Index(private val blockList: BlockList) {
 
     fun stopUpdating() {
         updating = false
+        blockMap.forEach( { (id, mappedId) -> blockList[mappedId].updatable = false})
     }
 }

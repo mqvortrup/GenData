@@ -3,7 +3,7 @@ package qm.gendata.storage
 interface Block {
     val capacity: Int
     val references: Int
-    var updating: Boolean
+    var updatable: Boolean
 
     operator fun set(key: Key, value: Value)
 
